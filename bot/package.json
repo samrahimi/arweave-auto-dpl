@@ -12,6 +12,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "node-twitter-api": "^1.8.0"
+    "node-twitter-api": "^1.8.0",
+    "twitter": "^1.7.1"
   }
 }
