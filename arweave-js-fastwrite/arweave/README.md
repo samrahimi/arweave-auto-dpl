@@ -1,0 +1,1 @@
+If the fastwrite branch of arweave-js does not install properly with npm i (certain linux environments), copy the contents of this folder into your node_modules, then navigate to node_modules/arweave and run npm i from there to install dependencies.
