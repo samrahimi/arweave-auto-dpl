@@ -4,7 +4,7 @@ import {isWhiteListed, isDuplicate, enqueue} from './queue'
     //given a comma separated list of screennames (e.g. '@2020WriteIn') returns the corresponding user ids
     const getUserIds= (screennames, creds, cb) =>{
         var client = new Twitter(creds);
-        client.get('users/lookup', {screen_name: screennames}, function(error, users, response) {
+        client.post('users/lookup', {screen_name: screennames}, function(error, users, response) {
             if (!error) {
               var userids = users.map(x => x.id_str).join(',')
               console.log(userids)
