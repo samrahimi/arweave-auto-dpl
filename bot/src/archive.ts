@@ -10,14 +10,16 @@ client.api.config.timeout = 1000 * 60 * 1.5;
 const writePageToArweave =async(htmlbundle: string, tags: Array<any>) => {
     try 
     {
-        const tx = await client.createTransaction({data: htmlbundle}, privateKey)
+        const txAnchor = await client.transactions.getTransactionAnchor();
+
+        const tx = await client.createTransaction({last_tx: txAnchor, data: htmlbundle}, privateKey)
         tx.addTag("Content-Type", "text/html")
         tx.addTag("User-Agent", "ArweaveAutoDPL/0.1")
 
         tags.forEach(tag => {
             tx.addTag(tag.name, tag.value)
         })
-
+        await client.transactions.sign(tx, privateKey)
         await client.transactions.post(tx);
         console.log(`Transaction is posted and will be mined shortly. Check status at https://viewblock.io/arweave/tx/${tx.id}`);
         return tx.id

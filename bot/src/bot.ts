@@ -3,17 +3,7 @@ const creds = require('../../data/creds.json')
 const whitelist= fs.readFileSync('../../data/whitelist.txt', "utf8").split('\n')
 const accounts = fs.readFileSync('../../data/accounts.txt', 'utf8').split('\n')
 import {startListening, getUserIds} from './twitter'
-
-const replaceAll = function (str, stringToFind, stringToReplace) {
-    if (stringToFind === stringToReplace) return str;
-    var temp = str;
-    var index = temp.indexOf(stringToFind);
-    while (index != -1) {
-        temp = temp.replace(stringToFind, stringToReplace);
-        index = temp.indexOf(stringToFind);
-    }
-    return temp;
-};
+import {replaceAll} from './util'
 
 
 

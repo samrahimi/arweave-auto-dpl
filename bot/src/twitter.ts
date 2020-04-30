@@ -20,7 +20,7 @@ import {isWhiteListed, isDuplicate, enqueue} from './queue'
         console.log(`[${instanceId}] listening started...`)
         stream.on('data', function(event) {
             if (event) {
-                console.log(`[${instanceId}] ${event.id}`)
+                //console.log(`[${instanceId}] ${event.id}`)
         
                 if (event.entities && event.entities.urls && event.entities.urls.length > 0) {
                     event.entities.urls.forEach(url => {
