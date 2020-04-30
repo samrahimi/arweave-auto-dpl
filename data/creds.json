@@ -1,6 +1,16 @@
-{
-    "consumer_key": "",
-    "consumer_secret": "",
-    "access_token_key":"",
-    "access_token_secret": ""
-}
+[
+    {
+        "comment": "free tier, owner unknown",
+        "consumer_key": "hBgUhFxipyNt2JT87QEGuV1Ok",
+        "consumer_secret": "kEkWlcKIC1nHamXMHOrYzZzsevGtnZ26j1XggoannDcvESRx9J",
+        "access_token_key":"898901988754153472-boY81BSVy95r26As36rYxzNX63C6ibl",
+        "access_token_secret": "obKPRXeSx6UiLUCQoirN95G2zt66TWepMbKQ032mzZFzL"
+    },
+    {
+        "comment": "professional tier, dev acct owned by Arweave (Matt / Jesper)",
+        "consumer_key": "RPERA9p0fOrUtR6Yan8szLli9",
+        "consumer_secret": "ohSK1nVrxjj83vKkiof1z8RfvgKYCOoUL3BBZa0qXVWvQyPFsy",
+        "access_token_key": "1255431693118386179-PAnsOF4bHYgiEXQX3syYXJZ6mND7aP",
+        "access_token_secret": "yMEtu0CwQANObf5LemhrsUXU472nPkOAAOw4fNSKDrxpM"
+    }
+]

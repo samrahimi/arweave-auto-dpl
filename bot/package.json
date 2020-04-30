@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-twitter-bot":"cd src && ts-node start_twitter_bot.ts",
+    "start-scraping": "cd src && ts-node start_scraping.ts"
   },
   "author": "",
   "license": "ISC",

@@ -1,7 +1,7 @@
 import {startScrapingThread} from './scrape'
 import {sleep} from './util'
 
-const MAX_THREADS = process.env.MAX_THREADS || 5
+const MAX_THREADS = process.env.MAX_THREADS || 10
 const STAGGER_INTERVAL = 1000
 
 const start = async() => {
