@@ -60,4 +60,4 @@ const logUrlDiscovery= async(url, twitterUserId, twitterUsername, tweetId) => {
         return result
 }
 
-export {logUrlDiscovery, updateModerationQueue, whitelisted, blacklisted}
+export {getHostname, logUrlDiscovery, updateModerationQueue, whitelisted, blacklisted}
