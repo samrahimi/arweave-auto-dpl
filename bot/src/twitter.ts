@@ -1,6 +1,6 @@
 const Twitter = require('twitter');
 import {isWhiteListed, isDuplicate, enqueue} from './queue'
-
+import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery} from './discovery'
     //given a comma separated list of screennames (e.g. '@2020WriteIn') returns the corresponding user ids
     const getUserIds= (screennames, creds, cb) =>{
         var client = new Twitter(creds);
@@ -24,16 +24,21 @@ import {isWhiteListed, isDuplicate, enqueue} from './queue'
         
                 if (event.entities && event.entities.urls && event.entities.urls.length > 0) {
                     event.entities.urls.forEach(url => {
-                        //console.log(url.expanded_url)
+                        console.log('logging '+url.expanded_url+' to all_urls')
+                        logUrlDiscovery(url.expanded_url, event.user_id, event.username, event.id)
+
                         //console.log('whitelisted: '+isWhitelisted(url.expanded_url, whitelist))
                         //console.log('duplicate: '+isDuplicate(url.expanded_url))
-        
-                        if (isWhiteListed(url.expanded_url, whitelist)) {
-                            enqueue(url.expanded_url).then(result => {
-                                if (result != null)
-                                    console.log(`[${instanceId}] added to queue: ${url.expanded_url}`)
-                            })
-                        }
+                        whitelisted(url.expanded_url).then(foundOnWhitelist => {
+                            if (foundOnWhitelist) {
+                                enqueue(url.expanded_url).then(result => {
+                                    if (result != null)
+                                        console.log(`[${instanceId}] added to queue: ${url.expanded_url}`)
+                                })
+                             }
+                         })
+
+                         updateModerationQueue(url.expanded_url, 'DPL_BOT').then(wasAdded => {'new host found: '+wasAdded})
                     })
                 }
             }

@@ -12,5 +12,13 @@
         "consumer_secret": "ohSK1nVrxjj83vKkiof1z8RfvgKYCOoUL3BBZa0qXVWvQyPFsy",
         "access_token_key": "1255431693118386179-PAnsOF4bHYgiEXQX3syYXJZ6mND7aP",
         "access_token_secret": "yMEtu0CwQANObf5LemhrsUXU472nPkOAAOw4fNSKDrxpM"
+    },
+    {
+        "comment": "from stale gh repo, unsure if working",
+        "consumer_key": "seITDT5BkGXh7Z5n5EEdUNOfU",
+        "consumer_secret": "ip4Xd6Ys4ojer17ZiCG9MS2RlYVo8pClNlxzmNyJ7suRRfqbUD",
+        "access_token": "2980753832-VVq4275h9NxNWSirvd5kc4jhwIjFMPQlUQonvbx",
+        "access_token_secret" : "OxenQNyM9PDVcwVRdWrmOKNHxWUud5yHJgikAiH8j8GR7"
     }
+
 ]
