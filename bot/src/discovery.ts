@@ -32,7 +32,7 @@ const updateModerationQueue = async(url, itemSource) => {
         var b = await blacklisted(hostname)
         if (!w && !b)
         {
-            var isInQueue = await db.query(`SELECT count(*) from auto_dpl.moderation_queue where normalized_url='${normalizedUrl}'`)
+            var isInQueue = await db.query(`SELECT count(*) from auto_dpl.moderation_queue where resource_value='${hostname}'`)
             if (isInQueue.rows[0].count == 0) {
                 var result = await db.query(`
                     insert into auto_dpl.moderation_queue 
