@@ -35,10 +35,12 @@ import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery} from '
                                     if (result != null)
                                         console.log(`[${instanceId}] added to queue: ${url.expanded_url}`)
                                 })
+                             } else {
+                                //adds the host to the mod q if not previously moderated or in queue
+                                updateModerationQueue(url.expanded_url, 'DPL_BOT').then(wasAdded => {'new host found: '+wasAdded})
                              }
                          })
 
-                         updateModerationQueue(url.expanded_url, 'DPL_BOT').then(wasAdded => {'new host found: '+wasAdded})
                     })
                 }
             }

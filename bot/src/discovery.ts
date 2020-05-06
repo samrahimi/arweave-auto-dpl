@@ -36,7 +36,7 @@ const updateModerationQueue = async(url, itemSource) => {
             if (isInQueue.rows[0].count == 0) {
                 var result = await db.query(`
                     insert into auto_dpl.moderation_queue 
-                    (resource_type, resource_value, 'added_by', 'moderation_status')
+                    (resource_type, resource_value, added_by, moderation_status)
                     values 
                     ('host','${hostname}','DPL_BOT' 'needs_review')`
                 )
@@ -48,8 +48,6 @@ const updateModerationQueue = async(url, itemSource) => {
         }
 }
     
-//adds url to db in queued state
-//assumes that the user has called isWhiteListed before
 //call this without AWAIT 
 const logUrlDiscovery= async(url, twitterUserId, twitterUsername, tweetId) => {
         var normalizedUrl= normalizeUrl(url)

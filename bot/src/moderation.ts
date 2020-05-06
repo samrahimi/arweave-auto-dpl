@@ -9,6 +9,11 @@ const moderateHostname = async(hostname, approved: boolean, moderator: string, c
                 set status='${approved ? 'whitelisted': 'blacklisted'}', moderated_by='${moderator}',  comments='${comments}'
                 where resource_value='${hostname}'`
             )
+
+            if (approved) 
+                await whitelist(hostname)
+            else
+                await blacklist(hostname)
         
             return true
         } else {
@@ -22,7 +27,29 @@ const normalizeUrl = (rawurl) => {
     //TODO: selectively remove tracking querystrings but leave the result... url.search = '' 
     return url.toString()
 }
-    
+
+const whitelist = async(hostname) => {
+    var result = await db.query(`
+    insert into auto_dpl.whitelist 
+    (hostname, comments, added_by)
+    values 
+    ('${hostname}','import from google sheets', 'DPL_BOT')`)
+
+    return result
+
+}
+
+
+const blacklist = async(hostname) => {
+    var result = await db.query(`
+    insert into auto_dpl.blacklist 
+    (hostname, comments, added_by)
+    values 
+    ('${hostname}','import from google sheets', 'DPL_BOT')`)
+
+    return result
+
+}
 
 //given a url, adds the hostname to the moderation queue, 
 //if and only if it has not been previously moderated or added to the queue
@@ -36,7 +63,7 @@ const updateModerationQueue = async(url, itemSource) => {
             if (isInQueue.rows[0].count == 0) {
                 var result = await db.query(`
                     insert into auto_dpl.moderation_queue 
-                    (resource_type, resource_value, 'added_by', 'moderation_status')
+                    (resource_type, resource_value, added_by, moderation_status)
                     values 
                     ('host','${hostname}','DPL_BOT' 'needs_review')`
                 )
@@ -47,3 +74,4 @@ const updateModerationQueue = async(url, itemSource) => {
             }
         }
 }
+export {updateModerationQueue, whitelist, blacklist, moderateHostname}
