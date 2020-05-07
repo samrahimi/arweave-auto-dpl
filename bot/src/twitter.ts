@@ -14,7 +14,7 @@ import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery} from '
             }
         })
     }
-    const startListening= (whitelist, filter, creds, instanceId) => {
+    const startListening= (filter, creds, instanceId) => {
         var client = new Twitter(creds);
         var stream = client.stream('statuses/filter', filter);
         console.log(`[${instanceId}] listening started...`)
@@ -25,7 +25,7 @@ import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery} from '
                 if (event.entities && event.entities.urls && event.entities.urls.length > 0) {
                     event.entities.urls.forEach(url => {
                         console.log('logging '+url.expanded_url+' to all_urls')
-                        logUrlDiscovery(url.expanded_url, event.user_id, event.username, event.id)
+                        logUrlDiscovery(url.expanded_url, 0, '', 0)
 
                         //console.log('whitelisted: '+isWhitelisted(url.expanded_url, whitelist))
                         //console.log('duplicate: '+isDuplicate(url.expanded_url))

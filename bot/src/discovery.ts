@@ -10,7 +10,7 @@ const normalizeUrl = (rawurl) => {
 
 const getHostname = (urlString) => {
     var url = new URL(urlString)
-    return url.hostname
+    return url.hostname.replace('www.','')
 }
 
 const whitelisted = async(hostname) => {
@@ -38,7 +38,7 @@ const updateModerationQueue = async(url, itemSource) => {
                     insert into auto_dpl.moderation_queue 
                     (resource_type, resource_value, added_by, moderation_status)
                     values 
-                    ('host','${hostname}','DPL_BOT' 'needs_review')`
+                    ('host','${hostname}','DPL_BOT', 'needs_review')`
                 )
             
                 return true
@@ -50,10 +50,15 @@ const updateModerationQueue = async(url, itemSource) => {
     
 //call this without AWAIT 
 const logUrlDiscovery= async(url, twitterUserId, twitterUsername, tweetId) => {
+        //while we normally want to log all urls (even if blacklisted) 
+        //we exclude twitter urls from the logging, because they are just wasting space - we don't need every RT logged if not a real URL
+        if (url.indexOf('twitter.com') >=0)
+            return
+
         var normalizedUrl= normalizeUrl(url)
         var result = await db.query(`
-            insert into auto_dpl.scraped_urls (raw_url, normalized_url, hostname, twitter_username, twitter_user_id, source_tweet_id) 
-            values ('${url}','${normalizedUrl}','${getHostname(normalizedUrl)}', ${twitterUsername},${twitterUserId},${tweetId})`
+            insert into auto_dpl.all_urls (raw_url, normalized_url, hostname, twitter_username, twitter_user_id, source_tweet_id) 
+            values ('${url}','${normalizedUrl}','${getHostname(normalizedUrl)}', '${twitterUsername}',${twitterUserId},${tweetId})`
             )
         return result
 }
