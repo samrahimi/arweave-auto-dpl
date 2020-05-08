@@ -1,6 +1,6 @@
 const Twitter = require('twitter');
 import {isWhiteListed, isDuplicate, enqueue} from './queue'
-import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery} from './discovery'
+import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery, getHostname} from './discovery'
     //given a comma separated list of screennames (e.g. '@2020WriteIn') returns the corresponding user ids
     const getUserIds= (screennames, creds, cb) =>{
         var client = new Twitter(creds);
@@ -29,8 +29,9 @@ import {whitelisted, blacklisted, updateModerationQueue, logUrlDiscovery} from '
 
                         //console.log('whitelisted: '+isWhitelisted(url.expanded_url, whitelist))
                         //console.log('duplicate: '+isDuplicate(url.expanded_url))
-                        whitelisted(url.expanded_url).then(foundOnWhitelist => {
+                        whitelisted(getHostname(url.expanded_url)).then(foundOnWhitelist => {
                             if (foundOnWhitelist) {
+                                console.log("found ")
                                 enqueue(url.expanded_url).then(result => {
                                     if (result != null)
                                         console.log(`[${instanceId}] added to queue: ${url.expanded_url}`)
