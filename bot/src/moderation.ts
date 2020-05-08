@@ -1,26 +1,52 @@
 import {db} from './db'
 import {getHostname, whitelisted, blacklisted} from './discovery'
 
-const moderateHostname = async(hostname, approved: boolean, moderator: string, comments: string) => {
-        var isInQueue = await db.query(`SELECT count(*) from auto_dpl.moderation_queue where resource_value='${hostname}'`)
-        if (isInQueue.rows[0].count == 0) {
+const moderateHostname = async(hostname, approved: boolean, moderator="", comments="") => {
             var result = await db.query(`
                 update auto_dpl.moderation_queue
-                set status='${approved ? 'whitelisted': 'blacklisted'}', moderated_by='${moderator}',  comments='${comments}'
+                set moderation_status='${approved ? 'whitelisted': 'blacklisted'}', moderated_by='${moderator}',  comments='${comments}'
                 where resource_value='${hostname}'`
             )
 
             if (approved) 
-                await whitelist(hostname)
+                await whitelist(hostname, moderator, comments)
             else
-                await blacklist(hostname)
+                await blacklist(hostname, moderator, comments)
         
-            return true
-        } else {
-            return false
-        }
-    }
+            return {success: true}
+}
 
+const lockWhileInProgress = async(hostname) => {
+    var result = await db.query(`
+                update auto_dpl.moderation_queue
+                set moderation_status='pending'
+                where resource_value='${hostname}'`
+            )
+    return result
+
+}
+//returns the next item in the queue, marking it's status so it is locked until disposition
+const getItemForReview = async() => {
+    //todo: prioritize by count of all_urls with matching hostname
+    var result = await db.query(`
+    select * from auto_dpl.moderation_queue 
+    where moderation_status='needs_review'
+    order by id asc limit 1`)
+
+    var queued_item = result.rows[0]
+
+    var urls_result = await db.query(`select * from auto_dpl.all_urls where hostname ='${queued_item.resource_value}'`)
+    await lockWhileInProgress(queued_item.resource_value)
+
+    var obj = {
+            id: queued_item.id,
+            hostname: queued_item.resource_value,
+            added_at: queued_item.added_at,
+            added_by: queued_item.added_by,
+            urls: urls_result.rows
+    }
+    return obj
+}
 const normalizeUrl = (rawurl) => {
     var url = new URL(rawurl)
     url.hash = ''
@@ -28,24 +54,24 @@ const normalizeUrl = (rawurl) => {
     return url.toString()
 }
 
-const whitelist = async(hostname) => {
+const whitelist = async(hostname, added_by='', comments='') => {
     var result = await db.query(`
     insert into auto_dpl.whitelist 
     (hostname, comments, added_by)
     values 
-    ('${hostname}','import from google sheets', 'DPL_BOT')`)
+    ('${hostname}','${comments}', '${added_by}')`)
 
     return result
 
 }
 
 
-const blacklist = async(hostname) => {
+const blacklist = async(hostname, added_by='', comments='') => {
     var result = await db.query(`
     insert into auto_dpl.blacklist 
     (hostname, comments, added_by)
     values 
-    ('${hostname}','import from google sheets', 'DPL_BOT')`)
+    ('${hostname}','${comments}', '${added_by}')`)
 
     return result
 
@@ -74,4 +100,4 @@ const updateModerationQueue = async(url, itemSource) => {
             }
         }
 }
-export {updateModerationQueue, whitelist, blacklist, moderateHostname}
+export {updateModerationQueue, whitelist, blacklist, moderateHostname, getItemForReview}
