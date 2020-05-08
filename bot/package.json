@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-twitter-bot": "cd src && ts-node start_twitter_bot.ts",
-    "start-scraping": "cd src && ts-node start_scraping.ts"
+    "start-scraping": "cd src && ts-node start_scraping.ts",
+    "start-api": "cd src/api && PORT=6789 ts-node index.ts"
   },
   "author": "",
   "license": "ISC",
